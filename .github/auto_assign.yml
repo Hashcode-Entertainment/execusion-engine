@@ -1,0 +1,15 @@
+addReviewers: true
+
+addAssignees: true
+
+reviewers:
+  - magikabdul
+  - hecateKat
+  - pawelkielb
+  - Jacentus
+  - jegor-chomczuk
+  - SebastianRoslon
+  - tyrontundrom
+  - Sopat11
+
+numberOfReviewers: 0
