@@ -19,6 +19,7 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         script: |
-          mkdir execution-engine
+          mkdir -p execution-engine
           cd execution-engine
+          rm -rf *
           git clone https://github.com/Hashcode-Entertainment/execution-engine.git
