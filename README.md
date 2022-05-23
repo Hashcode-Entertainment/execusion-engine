@@ -1,3 +1,4 @@
 # execution-engine
 
-![example workflow](https://github.com/Hashcode-Entertainment/execution-engine/actions/workflows/digital-ocean-deploy.yml/badge.svg)
+![Unit test status](https://github.com/Hashcode-Entertainment/execution-engine/actions/workflows/unit-tests.yml/badge.svg)
+![deploy status](https://github.com/Hashcode-Entertainment/execution-engine/actions/workflows/digital-ocean-deploy.yml/badge.svg)
