@@ -2,7 +2,7 @@ package cloud.hashcodeentertainment.executionengineservice.domain.docker.adapter
 
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientException;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType;
-import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerService;
+import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientFactory;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
@@ -15,7 +15,7 @@ import static cloud.hashcodeentertainment.executionengineservice.domain.docker.e
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.NETWORK;
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.UNIX;
 
-public class DockerServiceAdapter implements DockerService {
+public class DockerClientFactoryImpl implements DockerClientFactory {
 
     private String hostUrl = "localhost";
     private String hostPort = "2375";

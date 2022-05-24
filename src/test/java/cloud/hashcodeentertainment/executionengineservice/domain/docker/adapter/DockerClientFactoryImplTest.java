@@ -12,12 +12,12 @@ import static cloud.hashcodeentertainment.executionengineservice.domain.docker.p
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DockerServiceAdapterTest {
+class DockerClientFactoryImplTest {
 
     private final String VALID_ADDRESS = "example.domain.com";
     private final int VALID_PORT = 2375;
 
-    private final DockerServiceAdapter service = new DockerServiceAdapter();
+    private final DockerClientFactoryImpl service = new DockerClientFactoryImpl();
 
     @Test
     void shouldThrowDockerClientExceptionWhenAddressContainsComma() {

@@ -2,7 +2,7 @@ package cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in
 
 import com.github.dockerjava.api.DockerClient;
 
-public interface DockerService {
+public interface DockerClientFactory {
 
     DockerClient getClient();
 
