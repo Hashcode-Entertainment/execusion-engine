@@ -1,0 +1,27 @@
+name: Digtal Ocean - deploy
+
+on:
+  push:
+    branches: [ main ]
+    
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    steps:
+    - name: deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST_EE }}
+        username: ${{ secrets.SSH_USERNAME }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          mkdir -p execution-engine
+          cd execution-engine
+          rm -rf *
+          git clone https://github.com/Hashcode-Entertainment/execution-engine.git
+          docker container run --rm -v ${PWD}/execution-engine:/ee -v /root/.m2:/root/.m2 -w /ee maven:3.8.4-openjdk-17 mvn -DskipTests clean package spring-boot:repackage
+          systemctl restart eeapp.service
