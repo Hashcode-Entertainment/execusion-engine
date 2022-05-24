@@ -24,7 +24,7 @@ public class DockerClientFactoryImpl implements DockerClientFactory {
         String HOST_PREFIX = "tcp://";
         String DEFAULT_UNIX_DOCKER_HOST = "unix:///var/run/docker.sock";
 
-        return type.equals(UNIX) ? DEFAULT_UNIX_DOCKER_HOST : (HOST_PREFIX + hostUrl + hostPort);
+        return type.equals(UNIX) ? DEFAULT_UNIX_DOCKER_HOST : (HOST_PREFIX + hostUrl + ":" + hostPort);
     }
 
     private DockerClientConfig getDockerClientConfig(DockerClientType type) {
