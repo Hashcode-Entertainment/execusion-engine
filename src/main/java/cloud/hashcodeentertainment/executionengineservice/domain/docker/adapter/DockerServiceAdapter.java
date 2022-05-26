@@ -42,4 +42,9 @@ public class DockerServiceAdapter implements DockerService {
                 .filter(status -> status.matches("Status:.*"))
                 .findFirst().orElseThrow();
     }
+
+    @Override
+    public void runContainer(String image, String tag) {
+
+    }
 }
