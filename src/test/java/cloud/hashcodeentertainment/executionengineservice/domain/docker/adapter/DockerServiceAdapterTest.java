@@ -5,11 +5,13 @@ import cloud.hashcodeentertainment.executionengineservice.domain.docker.service.
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.validations.DockerClientAddressValidator;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.validations.DockerClientPortValidator;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.exception.NotFoundException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.NETWORK;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class DockerServiceAdapterTest {
@@ -35,9 +37,31 @@ class DockerServiceAdapterTest {
     }
 
     @Test
+    @Disabled(value = "This platform dependant")
     void shouldNotThrowAnyExceptionWhenDockerInstanceIsRunning() {
         dockerClient = new DockerClientServiceImpl(addressValidator, portValidator).getClient();
         service = new DockerServiceAdapter(addressValidator, portValidator);
         service.ping();
+    }
+
+    @Test
+    @Disabled(value = "This platform dependant")
+    void shouldReturnStatusContainingStringDownloadedOrUpToData() {
+        dockerClient = new DockerClientFactoryImpl().getClient();
+        service = new DockerServiceAdapter();
+
+        assertThat(service.pullImage("openjdk", "19-jdk"))
+                .isInstanceOf(String.class)
+                .containsAnyOf("Status: Image is up to date", "Downloaded");
+    }
+
+    @Test
+    @Disabled(value = "This platform dependant")
+    void shouldThrowNotFoundExceptionWhenImageIsNotAvailable() {
+        dockerClient = new DockerClientFactoryImpl().getClient();
+        service = new DockerServiceAdapter();
+
+        assertThatThrownBy(() -> service.pullImage("openjdk", "19-jd"))
+                .isInstanceOf(NotFoundException.class);
     }
 }
