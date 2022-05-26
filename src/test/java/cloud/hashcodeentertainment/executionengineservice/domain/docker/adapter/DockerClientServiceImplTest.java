@@ -1,23 +1,29 @@
 package cloud.hashcodeentertainment.executionengineservice.domain.docker.adapter;
 
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientException;
+import cloud.hashcodeentertainment.executionengineservice.domain.docker.service.DockerClientService;
+import cloud.hashcodeentertainment.executionengineservice.domain.docker.service.implementation.DockerClientServiceImpl;
 import com.github.dockerjava.api.DockerClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 
-import static cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientDictionary.INVALID_CHARACTER;
-import static cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientDictionary.INVALID_PORT_NUMBER;
+import static cloud.hashcodeentertainment.executionengineservice.domain.docker.utils.DockerClientDictionary.INVALID_CHARACTER;
+import static cloud.hashcodeentertainment.executionengineservice.domain.docker.utils.DockerClientDictionary.INVALID_PORT_NUMBER;
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.NETWORK;
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.UNIX;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-class DockerClientFactoryImplTest {
+@SpringBootTest
+class DockerClientServiceImplTest {
 
     private final String VALID_ADDRESS = "example.domain.com";
     private final int VALID_PORT = 2375;
 
-    private final DockerClientFactoryImpl service = new DockerClientFactoryImpl();
+    @Autowired
+    private DockerClientService service;
 
     @Test
     void shouldThrowDockerClientExceptionWhenAddressContainsComma() {

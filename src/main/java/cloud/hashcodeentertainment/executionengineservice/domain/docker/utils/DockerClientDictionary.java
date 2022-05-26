@@ -1,4 +1,4 @@
-package cloud.hashcodeentertainment.executionengineservice.domain.docker.exception;
+package cloud.hashcodeentertainment.executionengineservice.domain.docker.utils;
 
 public class DockerClientDictionary {
 
