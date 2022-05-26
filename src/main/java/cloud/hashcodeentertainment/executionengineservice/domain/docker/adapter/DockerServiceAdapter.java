@@ -1,9 +1,11 @@
 package cloud.hashcodeentertainment.executionengineservice.domain.docker.adapter;
 
+import cloud.hashcodeentertainment.executionengineservice.domain.docker.DockerOption;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerService;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.exception.NotFoundException;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import lombok.RequiredArgsConstructor;
@@ -44,7 +46,14 @@ public class DockerServiceAdapter implements DockerService {
     }
 
     @Override
-    public void runContainer(String image, String tag) {
+    public String startContainer(DockerOption option) {
+        CreateContainerResponse container = dockerClient
+                .createContainerCmd(option.getImage())
+                .withEntrypoint(option.getCommands())
+                .exec();
 
+        dockerClient.startContainerCmd(container.getId()).exec();
+
+        return container.getId();
     }
 }

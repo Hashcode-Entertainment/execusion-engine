@@ -1,5 +1,6 @@
 package cloud.hashcodeentertainment.executionengineservice.domain.docker.adapter;
 
+import cloud.hashcodeentertainment.executionengineservice.domain.docker.DockerOption;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.exception.NotFoundException;
@@ -53,5 +54,20 @@ class DockerServiceAdapterTest {
 
         assertThatThrownBy(() -> service.pullImage("openjdk", "19-jd"))
                 .isInstanceOf(NotFoundException.class);
+    }
+
+    @Test
+    void shouldCreateStartAndDeleteContainer() {
+        service = new DockerServiceAdapter();
+
+        DockerOption dockerOption = DockerOption.builder()
+                .name("openjdk")
+                .tag("19-jdk")
+                .command("/bin/bash")
+                .command("-c")
+                .command("java --version")
+                .build();
+
+        String containerId = service.startContainer(dockerOption);
     }
 }
