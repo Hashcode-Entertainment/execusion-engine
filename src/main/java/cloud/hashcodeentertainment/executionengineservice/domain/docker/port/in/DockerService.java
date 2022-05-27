@@ -1,6 +1,9 @@
 package cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in;
 
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.DockerOption;
+import cloud.hashcodeentertainment.executionengineservice.domain.docker.Output;
+
+import java.util.function.Consumer;
 
 public interface DockerService {
 
@@ -9,4 +12,6 @@ public interface DockerService {
     String pullImage(String name, String tag);
 
     String startContainer(DockerOption option);
+
+    void waitContainer(String containerId, int timeoutInSeconds, Consumer<Output> onLog);
 }

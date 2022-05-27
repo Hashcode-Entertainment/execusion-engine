@@ -11,6 +11,7 @@ import static cloud.hashcodeentertainment.executionengineservice.domain.docker.p
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+@Disabled
 class DockerServiceAdapterTest {
 
     private DockerClient dockerClient;
@@ -18,7 +19,6 @@ class DockerServiceAdapterTest {
     private DockerService service;
 
     @Test
-    @Disabled(value = "it takes long time before throwing this exception")
     void shouldThrowHttpHostConnectExceptionWhenNoDockerRunningUnderProvidedAddress() {
         dockerClient = new DockerClientFactoryImpl().getClient(NETWORK, "192.168.5.1", 5000);
         service = new DockerServiceAdapter();
@@ -28,7 +28,6 @@ class DockerServiceAdapterTest {
     }
 
     @Test
-    @Disabled(value = "This platform dependant")
     void shouldNotThrowAnyExceptionWhenDockerInstanceIsRunning() {
         dockerClient = new DockerClientFactoryImpl().getClient();
         service = new DockerServiceAdapter();
@@ -36,7 +35,6 @@ class DockerServiceAdapterTest {
     }
 
     @Test
-    @Disabled(value = "This platform dependant")
     void shouldReturnStatusContainingStringDownloadedOrUpToData() {
         dockerClient = new DockerClientFactoryImpl().getClient();
         service = new DockerServiceAdapter();
@@ -47,7 +45,6 @@ class DockerServiceAdapterTest {
     }
 
     @Test
-    @Disabled(value = "This platform dependant")
     void shouldThrowNotFoundExceptionWhenImageIsNotAvailable() {
         dockerClient = new DockerClientFactoryImpl().getClient();
         service = new DockerServiceAdapter();
@@ -69,5 +66,7 @@ class DockerServiceAdapterTest {
                 .build();
 
         String containerId = service.startContainer(dockerOption);
+
+        service.waitContainer(containerId, 60, output -> System.out.print("\033[0;34m" + new String(output.getData()) + "\033[0m"));
     }
 }
