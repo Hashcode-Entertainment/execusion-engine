@@ -16,4 +16,6 @@ public interface DockerService {
     void waitContainer(String containerId, int timeoutInSeconds, Consumer<Output> onLog);
 
     void stopContainer(String containerId);
+
+    void deleteContainer(String containerId);
 }

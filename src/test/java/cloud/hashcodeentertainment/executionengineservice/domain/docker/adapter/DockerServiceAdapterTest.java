@@ -68,5 +68,7 @@ class DockerServiceAdapterTest {
         String containerId = service.startContainer(dockerOption);
 
         service.waitContainer(containerId, 60, output -> System.out.print("\033[0;34m" + new String(output.getData()) + "\033[0m"));
+
+        service.deleteContainer(containerId);
     }
 }

@@ -101,4 +101,9 @@ public class DockerServiceAdapter implements DockerService {
             dockerClient.stopContainerCmd(containerId);
         }
     }
+
+    @Override
+    public void deleteContainer(String containerId) {
+        dockerClient.removeContainerCmd(containerId).exec();
+    }
 }
