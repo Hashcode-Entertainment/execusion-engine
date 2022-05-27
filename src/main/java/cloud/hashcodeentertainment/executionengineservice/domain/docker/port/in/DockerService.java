@@ -14,4 +14,6 @@ public interface DockerService {
     String startContainer(DockerOption option);
 
     void waitContainer(String containerId, int timeoutInSeconds, Consumer<Output> onLog);
+
+    void stopContainer(String containerId);
 }

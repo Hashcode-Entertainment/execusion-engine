@@ -92,4 +92,13 @@ public class DockerServiceAdapter implements DockerService {
             }
         }
     }
+
+    @Override
+    public void stopContainer(String containerId) {
+        var isRunning = dockerClient.inspectContainerCmd(containerId).exec().getState().getRunning();
+
+        if (isRunning != null && isRunning) {
+            dockerClient.stopContainerCmd(containerId);
+        }
+    }
 }
