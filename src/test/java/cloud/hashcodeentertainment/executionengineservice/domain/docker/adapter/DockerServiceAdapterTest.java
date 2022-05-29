@@ -6,6 +6,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.exception.NotFoundException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.NETWORK;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -16,12 +17,15 @@ class DockerServiceAdapterTest {
 
     private DockerClient dockerClient;
 
+    @Autowired
     private DockerService service;
+
+    @Autowired
+    private DockerClientFactoryImpl dockerClientFactory;
 
     @Test
     void shouldThrowHttpHostConnectExceptionWhenNoDockerRunningUnderProvidedAddress() {
-        dockerClient = new DockerClientFactoryImpl().getClient(NETWORK, "192.168.5.1", 5000);
-        service = new DockerServiceAdapter();
+        dockerClient = dockerClientFactory.getClient(NETWORK, "192.168.5.1", 5000);
 
         assertThatThrownBy(() -> service.ping())
                 .isInstanceOf(RuntimeException.class);
@@ -29,15 +33,13 @@ class DockerServiceAdapterTest {
 
     @Test
     void shouldNotThrowAnyExceptionWhenDockerInstanceIsRunning() {
-        dockerClient = new DockerClientFactoryImpl().getClient();
-        service = new DockerServiceAdapter();
+        dockerClient =dockerClientFactory.getClient();
         service.ping();
     }
 
     @Test
     void shouldReturnStatusContainingStringDownloadedOrUpToData() {
-        dockerClient = new DockerClientFactoryImpl().getClient();
-        service = new DockerServiceAdapter();
+        dockerClient = dockerClientFactory.getClient();
 
         assertThat(service.pullImage("openjdk", "19-jdk"))
                 .isInstanceOf(String.class)
@@ -46,8 +48,8 @@ class DockerServiceAdapterTest {
 
     @Test
     void shouldThrowNotFoundExceptionWhenImageIsNotAvailable() {
-        dockerClient = new DockerClientFactoryImpl().getClient();
-        service = new DockerServiceAdapter();
+        dockerClient = dockerClientFactory.getClient();
+
 
         assertThatThrownBy(() -> service.pullImage("openjdk", "19-jd"))
                 .isInstanceOf(NotFoundException.class);
@@ -55,7 +57,6 @@ class DockerServiceAdapterTest {
 
     @Test
     void shouldCreateStartAndDeleteContainer() {
-        service = new DockerServiceAdapter();
 
         DockerOption dockerOption = DockerOption.builder()
                 .name("openjdk")

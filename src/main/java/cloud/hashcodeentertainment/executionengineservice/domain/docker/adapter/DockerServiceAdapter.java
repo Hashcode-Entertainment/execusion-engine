@@ -6,11 +6,8 @@ import cloud.hashcodeentertainment.executionengineservice.domain.docker.Output;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerException;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerService;
 import com.github.dockerjava.api.DockerClient;
-import com.github.dockerjava.api.async.ResultCallback;
-import com.github.dockerjava.api.command.CreateContainerCmd;
 import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
-import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +26,7 @@ import java.util.function.Consumer;
 @Service
 public class DockerServiceAdapter implements DockerService {
 
-    private final DockerClient dockerClient = new DockerClientFactoryImpl().getClient();
+    private final DockerClient dockerClient;
 
     @Override
     public void ping() {
