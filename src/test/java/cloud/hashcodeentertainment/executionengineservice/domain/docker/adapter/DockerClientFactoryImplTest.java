@@ -1,12 +1,12 @@
 package cloud.hashcodeentertainment.executionengineservice.domain.docker.adapter;
 
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientException;
+import cloud.hashcodeentertainment.executionengineservice.utils.MessageUtils;
 import com.github.dockerjava.api.DockerClient;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import static cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientDictionary.INVALID_CHARACTER;
-import static cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientDictionary.INVALID_PORT_NUMBER;
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.NETWORK;
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.UNIX;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -17,7 +17,8 @@ class DockerClientFactoryImplTest {
     private final String VALID_ADDRESS = "example.domain.com";
     private final int VALID_PORT = 2375;
 
-    private final DockerClientFactoryImpl service = new DockerClientFactoryImpl();
+    @Autowired
+    private DockerClientFactoryImpl service;
 
     @Test
     void shouldThrowDockerClientExceptionWhenAddressContainsComma() {
@@ -25,7 +26,7 @@ class DockerClientFactoryImplTest {
 
         assertThatThrownBy(() -> service.getClient(NETWORK, address, VALID_PORT))
                 .isInstanceOf(DockerClientException.class)
-                .hasMessage(INVALID_CHARACTER);
+                .hasMessage(MessageUtils.getMessage("validation.docker.client.address"));
     }
 
     @Test
@@ -40,7 +41,7 @@ class DockerClientFactoryImplTest {
 
         assertThatThrownBy(() -> service.getClient(NETWORK, VALID_ADDRESS, port))
                 .isInstanceOf(DockerClientException.class)
-                .hasMessage(INVALID_PORT_NUMBER);
+                .hasMessage(MessageUtils.getMessage("validation.docker.client.port"));
     }
 
     @Test
@@ -49,7 +50,7 @@ class DockerClientFactoryImplTest {
 
         assertThatThrownBy(() -> service.getClient(NETWORK, VALID_ADDRESS, port))
                 .isInstanceOf(DockerClientException.class)
-                .hasMessage(INVALID_PORT_NUMBER);
+                .hasMessage(MessageUtils.getMessage("validation.docker.client.port"));
     }
 
     @Test
@@ -58,7 +59,7 @@ class DockerClientFactoryImplTest {
 
         assertThatThrownBy(() -> service.getClient(NETWORK, VALID_ADDRESS, port))
                 .isInstanceOf(DockerClientException.class)
-                .hasMessage(INVALID_PORT_NUMBER);
+                .hasMessage(MessageUtils.getMessage("validation.docker.client.port"));
     }
 
     @Test
