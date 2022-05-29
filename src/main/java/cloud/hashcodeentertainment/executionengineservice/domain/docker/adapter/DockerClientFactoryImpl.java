@@ -1,30 +1,33 @@
 package cloud.hashcodeentertainment.executionengineservice.domain.docker.adapter;
 
-import cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientException;
-import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientFactory;
+import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType;
+import cloud.hashcodeentertainment.executionengineservice.utils.Configuration;
+import cloud.hashcodeentertainment.executionengineservice.validators.DockerClientAddressValidator;
+import cloud.hashcodeentertainment.executionengineservice.validators.DockerClientPortValidator;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DefaultDockerClientConfig;
 import com.github.dockerjava.core.DockerClientConfig;
 import com.github.dockerjava.core.DockerClientImpl;
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import com.github.dockerjava.transport.DockerHttpClient;
+import lombok.RequiredArgsConstructor;
 
-import static cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientDictionary.INVALID_CHARACTER;
-import static cloud.hashcodeentertainment.executionengineservice.domain.docker.exception.DockerClientDictionary.INVALID_PORT_NUMBER;
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.NETWORK;
 import static cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerClientType.UNIX;
 
+@RequiredArgsConstructor
 public class DockerClientFactoryImpl implements DockerClientFactory {
 
-    private String hostUrl = "localhost";
-    private String hostPort = "2375";
+    private final DockerClientAddressValidator dockerClientAddressValidator;
+
+    private final DockerClientPortValidator dockerClientPortValidator;
 
     private String getDockerHost(DockerClientType type) {
         String HOST_PREFIX = "tcp://";
         String DEFAULT_UNIX_DOCKER_HOST = "unix:///var/run/docker.sock";
 
-        return type.equals(UNIX) ? DEFAULT_UNIX_DOCKER_HOST : (HOST_PREFIX + hostUrl + ":" + hostPort);
+        return type.equals(UNIX) ? DEFAULT_UNIX_DOCKER_HOST : (HOST_PREFIX + Configuration.serverHost + ":" + Configuration.serverPort);
     }
 
     private DockerClientConfig getDockerClientConfig(DockerClientType type) {
@@ -60,25 +63,25 @@ public class DockerClientFactoryImpl implements DockerClientFactory {
 
     @Override
     public DockerClient getClient(DockerClientType type, String address, int port) {
-        hostUrl = validateAddress(address);
-        hostPort = validatePort(port);
+        dockerClientAddressValidator.validate(address);
+        dockerClientPortValidator.validate(port);
 
         return getClient(type);
     }
 
-    private String validateAddress(String address) {
-        if (address.contains(",")) {
-            throw new DockerClientException(INVALID_CHARACTER);
-        } else {
-            return address;
-        }
-    }
-
-    private String validatePort(int port) {
-        if (port <= 0 || port >= 65536) {
-            throw new DockerClientException(INVALID_PORT_NUMBER);
-        } else {
-            return String.valueOf(port);
-        }
-    }
+//    private String validateAddress(String address) {
+//        if (address.contains(",")) {
+//            throw new DockerClientException(INVALID_CHARACTER);
+//        } else {
+//            return address;
+//        }
+//    }
+//
+//    private String validatePort(int port) {
+//        if (port <= 0 || port >= 65536) {
+//            throw new DockerClientException(INVALID_PORT_NUMBER);
+//        } else {
+//            return String.valueOf(port);
+//        }
+//    }
 }
