@@ -1,6 +1,6 @@
 package cloud.hashcodeentertainment.executionengineservice.domain.docker.adapter;
 
-import cloud.hashcodeentertainment.executionengineservice.domain.docker.DockerOption;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerOption;
 import cloud.hashcodeentertainment.executionengineservice.domain.docker.port.in.DockerService;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.exception.NotFoundException;
