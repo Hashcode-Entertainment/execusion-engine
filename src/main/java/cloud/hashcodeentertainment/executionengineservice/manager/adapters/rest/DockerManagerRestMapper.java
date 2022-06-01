@@ -1,6 +1,7 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.adapters.rest;
 
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNode;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 
@@ -13,4 +14,6 @@ public interface DockerManagerRestMapper {
 
     @IterableMapping(elementTargetType = DockerNodeResponse.class)
     List<DockerNodeResponse> toRest(List<DockerNode> dockerNodes);
+
+    DockerNodeRequest toDomain(DockerNodeCreateRequest nodeCreateRequest);
 }
