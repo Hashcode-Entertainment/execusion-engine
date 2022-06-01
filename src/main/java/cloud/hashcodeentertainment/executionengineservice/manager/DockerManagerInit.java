@@ -26,5 +26,7 @@ public class DockerManagerInit {
                 .build();
 
         managerService.addNode(localDockerNode);
+
+        //TODO add to nodes all persisted nodes from db
     }
 }

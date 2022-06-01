@@ -9,11 +9,18 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
     private final List<DockerNode> dockerNodes = new ArrayList<>();
 
-
+    @Override
+    public List<DockerNode> getAllNodesFullInfo() {
+        return dockerNodes;
+    }
 
     @Override
-    public List<DockerNode> getAllNodes() {
-        return dockerNodes;
+    public List<DockerNode> getAllNodesOnlyNamesAndStatuses() {
+        return dockerNodes.stream()
+                .peek(dockerNode -> {
+                    dockerNode.setAddress(null);
+                    dockerNode.setPort(0);
+                }).toList();
     }
 
     @Override

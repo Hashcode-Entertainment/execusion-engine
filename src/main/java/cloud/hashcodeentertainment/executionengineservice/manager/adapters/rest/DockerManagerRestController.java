@@ -17,9 +17,17 @@ public class DockerManagerRestController {
     private final DockerManagerService managerService;
     private final DockerManagerRestMapper restMapper;
 
-    @GetMapping
-    public ResponseEntity<List<DockerNodeResponse>> getAllNodes() {
-        var nodes = managerService.getAllNodes();
+    @GetMapping("nodes/info")
+    public ResponseEntity<List<DockerNodeResponse>> getAllNodesInfo() {
+        var nodes = managerService.getAllNodesOnlyNamesAndStatuses();
+        var nodeResponses = restMapper.toRest(nodes);
+
+        return ResponseEntity.ok(nodeResponses);
+    }
+
+    @GetMapping("nodes/info/detailed")
+    public ResponseEntity<List<DockerNodeResponse>> getAllNodesDetailedInfo() {
+        var nodes = managerService.getAllNodesFullInfo();
         var nodeResponses = restMapper.toRest(nodes);
 
         return ResponseEntity.ok(nodeResponses);
