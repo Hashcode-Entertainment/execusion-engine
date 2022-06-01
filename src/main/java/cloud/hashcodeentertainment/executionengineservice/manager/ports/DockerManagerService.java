@@ -7,4 +7,6 @@ import java.util.List;
 public interface DockerManagerService {
 
     List<DockerNode> getAllNodes();
+
+    void addNode(DockerNode dockerNode);
 }

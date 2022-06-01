@@ -9,13 +9,13 @@ import static cloud.hashcodeentertainment.executionengineservice.manager.domain.
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Disabled
-class DockerUnitTest {
+class DockerClientUnitTest {
 
-    private final DockerUnit dockerUnit = new DockerUnit();
+    private final DockerClientUnit dockerClientUnit = new DockerClientUnit();
 
     @Test
     void shouldGetLocalClient() {
-        dockerUnit.getLocalClient().pingCmd().exec();
+        dockerClientUnit.getLocalClient().pingCmd().exec();
     }
 
     @Test
@@ -23,7 +23,7 @@ class DockerUnitTest {
         String address = "192.168.1.245";
         int port = 2375;
 
-        dockerUnit.getRemoteClient(address, port).pingCmd().exec();
+        dockerClientUnit.getRemoteClient(address, port).pingCmd().exec();
     }
 
     @Test
@@ -31,7 +31,7 @@ class DockerUnitTest {
         String fakeAddress = "192.167.1.200";
         int port = 2375;
 
-        assertThatThrownBy(() -> dockerUnit.getRemoteClient(fakeAddress, port).pingCmd().exec())
+        assertThatThrownBy(() -> dockerClientUnit.getRemoteClient(fakeAddress, port).pingCmd().exec())
                 .hasCauseInstanceOf(HttpHostConnectException.class)
                 .hasMessageMatching("^.*\\b(Connetion|)\\b.*$");
     }
@@ -41,7 +41,7 @@ class DockerUnitTest {
         String address = "192.168.1.245";
         int port = 0;
 
-        assertThatThrownBy(() -> dockerUnit.getRemoteClient(address, port).pingCmd().exec())
+        assertThatThrownBy(() -> dockerClientUnit.getRemoteClient(address, port).pingCmd().exec())
                 .isInstanceOf(DockerClientException.class)
                 .hasMessage(INVALID_PORT_NUMBER);
     }
@@ -51,7 +51,7 @@ class DockerUnitTest {
         String address = "192.168.1.245";
         int port = 65536;
 
-        assertThatThrownBy(() -> dockerUnit.getRemoteClient(address, port).pingCmd().exec())
+        assertThatThrownBy(() -> dockerClientUnit.getRemoteClient(address, port).pingCmd().exec())
                 .isInstanceOf(DockerClientException.class)
                 .hasMessage(INVALID_PORT_NUMBER);
     }
@@ -61,7 +61,7 @@ class DockerUnitTest {
         String address = "192.168.1,245";
         int port = 2375;
 
-        assertThatThrownBy(() -> dockerUnit.getRemoteClient(address, port).pingCmd().exec())
+        assertThatThrownBy(() -> dockerClientUnit.getRemoteClient(address, port).pingCmd().exec())
                 .isInstanceOf(DockerClientException.class)
                 .hasMessage(INVALID_CHARACTER);
     }

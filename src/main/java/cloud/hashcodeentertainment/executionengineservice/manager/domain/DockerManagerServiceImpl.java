@@ -1,19 +1,23 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
-import lombok.RequiredArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
-@RequiredArgsConstructor
 public class DockerManagerServiceImpl implements DockerManagerService {
 
-    private final List<DockerNode> dockerNodes;
+    private final List<DockerNode> dockerNodes = new ArrayList<>();
 
 
 
     @Override
     public List<DockerNode> getAllNodes() {
-        return null;
+        return dockerNodes;
+    }
+
+    @Override
+    public void addNode(DockerNode dockerNode) {
+        dockerNodes.add(dockerNode);
     }
 }

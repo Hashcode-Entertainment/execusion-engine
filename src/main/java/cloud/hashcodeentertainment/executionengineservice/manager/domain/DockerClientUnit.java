@@ -8,7 +8,7 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerClientDictionary.INVALID_CHARACTER;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerClientDictionary.INVALID_PORT_NUMBER;
 
-public class DockerUnit {
+public class DockerClientUnit {
 
     private final String DOCKER_LINUX_LOCALHOST = "unix:///var/run/docker.sock";
     private final String DOCKER_WINDOWS_LOCALHOST = "tcp://localhost:2375";
