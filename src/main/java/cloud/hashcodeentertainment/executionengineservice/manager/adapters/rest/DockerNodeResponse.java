@@ -14,5 +14,8 @@ public class DockerNodeResponse {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String port;
+
     private DockerNodeStatus status;
+
+    private int numberOfRunningTasks;
 }

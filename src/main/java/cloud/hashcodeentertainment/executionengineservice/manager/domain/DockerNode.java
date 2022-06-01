@@ -13,4 +13,5 @@ public class DockerNode {
     private String address;
     private int port;
     private DockerNodeStatus status;
+    private int numberOfRunningTasks;
 }
