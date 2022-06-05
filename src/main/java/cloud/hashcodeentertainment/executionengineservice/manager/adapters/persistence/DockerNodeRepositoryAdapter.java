@@ -35,4 +35,9 @@ public class DockerNodeRepositoryAdapter implements DockerNodeRepository {
 
         return nodeRepositoryMapper.toDomain(savedEntity);
     }
+
+    @Override
+    public void deleteNode(String name) {
+        nodeJpaRepository.deleteByName(name);
+    }
 }

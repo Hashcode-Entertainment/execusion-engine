@@ -12,4 +12,6 @@ public interface DockerManagerService {
     List<DockerNode> getAllNodesFullInfo();
 
     void addNode(DockerNodeRequest nodeRequest);
+
+    void removeNode(String name);
 }

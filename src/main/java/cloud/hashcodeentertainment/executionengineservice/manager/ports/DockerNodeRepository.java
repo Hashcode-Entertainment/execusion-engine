@@ -11,4 +11,6 @@ public interface DockerNodeRepository {
     Optional<DockerNode> getByName(String name);
 
     Optional<DockerNode> getByAddress(String address);
+
+    void deleteNode(String name);
 }

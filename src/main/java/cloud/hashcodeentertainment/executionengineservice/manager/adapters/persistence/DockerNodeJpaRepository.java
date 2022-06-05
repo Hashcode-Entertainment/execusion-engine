@@ -9,4 +9,6 @@ public interface DockerNodeJpaRepository extends JpaRepository<DockerNodeEntity,
     Optional<DockerNodeEntity> findByName(String name);
 
     Optional<DockerNodeEntity> findByAddress(String address);
+
+    void deleteByName(String name);
 }

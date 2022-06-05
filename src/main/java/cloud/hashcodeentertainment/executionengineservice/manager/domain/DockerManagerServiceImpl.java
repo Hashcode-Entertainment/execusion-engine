@@ -5,6 +5,7 @@ import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNo
 import com.github.dockerjava.api.DockerClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,10 +14,12 @@ import java.util.concurrent.TimeUnit;
 
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ADDRESS_EXISTS;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_EXISTS;
+import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_NOT_FOUND;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ONLY_ONE_LOCAL_INSTANCE;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeStatus.OFFLINE;
 
 @RequiredArgsConstructor
+@Transactional
 public class DockerManagerServiceImpl implements DockerManagerService {
 
     private final String LOCAL_NODE_NAME = "local";
@@ -59,7 +62,6 @@ public class DockerManagerServiceImpl implements DockerManagerService {
                 .status(OFFLINE)
                 .build();
 
-        //TODO save to db any not local node
         dockerNodes.add(dockerNode);
 
         if (!nodeRequest.getName().equals(LOCAL_NODE_NAME)) {
@@ -67,6 +69,16 @@ public class DockerManagerServiceImpl implements DockerManagerService {
         }
     }
 
+    @Override
+    public void removeNode(String name) {
+        if (!existsDockerNodeName(name)) {
+            throw new DockerManagerException(NODE_NAME_NOT_FOUND);
+        }
+
+        nodeRepository.deleteNode(name);
+    }
+
+    //TODO periodical node status check
     //    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
     private void checkStatus() {
         System.out.println("test schedule");
