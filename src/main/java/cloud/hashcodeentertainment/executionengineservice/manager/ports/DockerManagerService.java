@@ -14,4 +14,6 @@ public interface DockerManagerService {
     void addNode(DockerNodeRequest nodeRequest);
 
     void removeNode(String name);
+
+    void restorePersistedNodes();
 }

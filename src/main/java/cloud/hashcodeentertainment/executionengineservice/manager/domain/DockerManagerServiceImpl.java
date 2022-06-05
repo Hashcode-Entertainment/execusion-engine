@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ADDRESS_EXISTS;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_EXISTS;
@@ -75,7 +76,22 @@ public class DockerManagerServiceImpl implements DockerManagerService {
             throw new DockerManagerException(NODE_NAME_NOT_FOUND);
         }
 
+        var node = dockerNodes.stream()
+                .filter(dockerNode -> dockerNode.getName().equals(name))
+                .findFirst();
+
+        node.ifPresent(dockerNodes::remove);
+
         nodeRepository.deleteNode(name);
+    }
+
+    @Override
+    public void restorePersistedNodes() {
+        var persistedNodes = nodeRepository.getAllNodes();
+
+        persistedNodes.stream()
+                .filter(node -> !node.getName().equals(LOCAL_NODE_NAME))
+                .forEach(dockerNodes::add);
     }
 
     //TODO periodical node status check

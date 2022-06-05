@@ -5,6 +5,7 @@ import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNo
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 @Component
@@ -39,5 +40,10 @@ public class DockerNodeRepositoryAdapter implements DockerNodeRepository {
     @Override
     public void deleteNode(String name) {
         nodeJpaRepository.deleteByName(name);
+    }
+
+    @Override
+    public List<DockerNode> getAllNodes() {
+        return nodeRepositoryMapper.toDomain(nodeJpaRepository.findAll());
     }
 }
