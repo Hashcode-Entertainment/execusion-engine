@@ -4,6 +4,7 @@ import cloud.hashcodeentertainment.executionengineservice.commons.rest.LocationU
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 import static cloud.hashcodeentertainment.executionengineservice.commons.rest.LocationUri.getUri;
+import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
 @RequestMapping("manager")
@@ -43,10 +45,8 @@ public class DockerManagerRestController {
     @PostMapping("nodes")
     public ResponseEntity<Void> createNode(@Valid @RequestBody DockerNodeCreateRequest nodeCreateRequest) {
         var nodeRequest = restMapper.toDomain(nodeCreateRequest);
-
         managerService.addNode(nodeRequest);
 
-        //TODO fix proper id handling
-        return ResponseEntity.created(getUri(1)).build();
+        return ResponseEntity.status(CREATED).build();
     }
 }

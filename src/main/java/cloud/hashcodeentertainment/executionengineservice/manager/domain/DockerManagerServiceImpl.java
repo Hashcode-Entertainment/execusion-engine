@@ -1,21 +1,29 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
+import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
+import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ADDRESS_EXISTS;
+import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_EXISTS;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ONLY_ONE_LOCAL_INSTANCE;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeStatus.OFFLINE;
 
+@RequiredArgsConstructor
 public class DockerManagerServiceImpl implements DockerManagerService {
 
     private final String LOCAL_NODE_NAME = "local";
 
     private final List<DockerNode> dockerNodes = new ArrayList<>();
+
+    private final DockerNodeRepository nodeRepository;
 
     @Override
     public List<DockerNode> getAllNodesFullInfo() {
@@ -35,6 +43,14 @@ public class DockerManagerServiceImpl implements DockerManagerService {
     public void addNode(DockerNodeRequest nodeRequest) {
         var dockerClient = getClient(nodeRequest.getAddress(), nodeRequest.getPort());
 
+        if (existsDockerNodeName(nodeRequest.getName())) {
+            throw new DockerManagerException(NODE_NAME_EXISTS);
+        }
+
+        if (existsDockerNodeAddress(nodeRequest.getAddress())) {
+            throw new DockerManagerException(ADDRESS_EXISTS);
+        }
+
         var dockerNode = DockerNode.builder()
                 .name(nodeRequest.getName())
                 .address(nodeRequest.getAddress())
@@ -45,6 +61,23 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
         //TODO save to db any not local node
         dockerNodes.add(dockerNode);
+
+        if (!nodeRequest.getName().equals(LOCAL_NODE_NAME)) {
+            nodeRepository.save(dockerNode);
+        }
+    }
+
+    //    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
+    private void checkStatus() {
+        System.out.println("test schedule");
+    }
+
+    private boolean existsDockerNodeName(String name) {
+        return nodeRepository.getByName(name).isPresent();
+    }
+
+    private boolean existsDockerNodeAddress(String address) {
+        return nodeRepository.getByAddress(address).isPresent();
     }
 
     private DockerClient getClient(String address, int port) {
