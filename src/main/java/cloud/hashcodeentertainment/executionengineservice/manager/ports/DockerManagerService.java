@@ -16,4 +16,6 @@ public interface DockerManagerService {
     void removeNode(String name);
 
     void restorePersistedNodes();
+
+    void updateDockerClientsStatuses();
 }

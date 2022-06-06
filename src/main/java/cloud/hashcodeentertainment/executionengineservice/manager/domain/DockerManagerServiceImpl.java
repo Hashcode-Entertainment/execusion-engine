@@ -4,20 +4,18 @@ import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerMa
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ADDRESS_EXISTS;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_EXISTS;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_NOT_FOUND;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ONLY_ONE_LOCAL_INSTANCE;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeStatus.OFFLINE;
+import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeStatus.ONLINE;
 
 @RequiredArgsConstructor
 @Transactional
@@ -91,13 +89,19 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
         persistedNodes.stream()
                 .filter(node -> !node.getName().equals(LOCAL_NODE_NAME))
-                .forEach(dockerNodes::add);
-    }
+                .forEach(dockerNode -> {
+                    var dockerClient = getClient(dockerNode.getAddress(), dockerNode.getPort());
 
-    //TODO periodical node status check
-    //    @Scheduled(fixedRate = 5, timeUnit = TimeUnit.SECONDS)
-    private void checkStatus() {
-        System.out.println("test schedule");
+                    var restoredNode = DockerNode.builder()
+                            .name(dockerNode.getName())
+                            .address(dockerNode.getAddress())
+                            .port(dockerNode.getPort())
+                            .client(dockerClient)
+                            .status(OFFLINE)
+                            .build();
+
+                    dockerNodes.add(restoredNode);
+                });
     }
 
     private boolean existsDockerNodeName(String name) {
@@ -134,5 +138,19 @@ public class DockerManagerServiceImpl implements DockerManagerService {
                 .filter(dockerNode -> dockerNode.getAddress().equals(address))
                 .findAny()
                 .isEmpty();
+    }
+
+    @Override
+    public void updateDockerClientsStatuses() {
+        var numberOfNodes = dockerNodes.size();
+
+        for (int i = 0; i < numberOfNodes; i++) {
+            try {
+                dockerNodes.get(i).getClient().pingCmd().exec();
+                dockerNodes.get(i).setStatus(ONLINE);
+            } catch (Exception ex) {
+                dockerNodes.get(i).setStatus(OFFLINE);
+            }
+        }
     }
 }

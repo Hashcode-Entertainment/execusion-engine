@@ -6,6 +6,7 @@ import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerMa
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static cloud.hashcodeentertainment.executionengineservice.commons.rest.LocationUri.getUri;
 import static org.springframework.http.HttpStatus.CREATED;
