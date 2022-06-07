@@ -1,4 +1,4 @@
-package cloud.hashcodeentertainment.executionengineservice.domain.docker;
+package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 
 import lombok.Builder;
 import lombok.Getter;
