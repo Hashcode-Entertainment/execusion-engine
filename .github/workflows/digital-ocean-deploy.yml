@@ -23,5 +23,5 @@ jobs:
           cd execution-engine
           rm -rf *
           git clone https://github.com/Hashcode-Entertainment/execution-engine.git
-          docker container run --rm -v ${PWD}/execution-engine:/ee -v /root/.m2:/root/.m2 -w /ee maven:3.8.4-openjdk-17 mvn -DskipTests clean package spring-boot:repackage
+          docker container run --rm -v ${PWD}/execution-engine:/ee -v /root/.m2:/root/.m2 -w /ee maven:3.8.4-openjdk-17 mvn -DskipTests -Dspring.profiles.active=prod clean package spring-boot:repackage
           systemctl restart eeapp.service
