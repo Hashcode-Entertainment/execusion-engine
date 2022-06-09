@@ -4,6 +4,7 @@ import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerN
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public interface DockerManagerService {
 
@@ -18,4 +19,8 @@ public interface DockerManagerService {
     void restorePersistedNodes();
 
     void updateDockerClientsStatuses();
+
+
+
+    String pullImage(String name, String tag, int timeoutInSeconds);
 }
