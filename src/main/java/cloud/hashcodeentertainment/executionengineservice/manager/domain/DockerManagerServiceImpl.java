@@ -3,12 +3,21 @@ package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.Image;
+import com.github.dockerjava.api.model.PullResponseItem;
+import com.github.dockerjava.api.model.ResponseItem;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ADDRESS_EXISTS;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_EXISTS;
@@ -102,6 +111,77 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
                     dockerNodes.add(restoredNode);
                 });
+    }
+
+    @Override
+    public List<DockerImage> getAllImages() {
+        var dockerClient = getDockerClient();
+
+        List<Image> images = dockerClient.listImagesCmd().exec();
+        return images.stream()
+                .map(image -> DockerImage.builder()
+                        .id(image.getId().substring(7))
+                        .name(parseRepoTag(image.getRepoTags(), true))
+                        .tag(parseRepoTag(image.getRepoTags(), false))
+                        .build()
+                )
+                .toList();
+    }
+
+    private String parseRepoTag(String[] repoTags, boolean getName) {
+        String repoTag = Arrays.stream(repoTags).findAny().orElse(":");
+        int i = repoTag.indexOf(":");
+        if (getName) {
+            return repoTag.substring(0, i);
+        } else {
+            return repoTag.substring(i + 1);
+        }
+    }
+
+    @Override
+    @SneakyThrows
+    public String pullImage(String name, String tag, int timeoutInSeconds) {
+        var dockerClient = getDockerClient();
+
+        List<PullResponseItem> responseItems = new ArrayList<>();
+
+        dockerClient
+                .pullImageCmd(name + ":" + tag)
+                .exec(new PullImageResultCallback() {
+                    @Override
+                    public void onNext(PullResponseItem item) {
+                        responseItems.add(item);
+                        super.onNext(item);
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+                        super.onError(throwable);
+                    }
+
+                    @Override
+                    public void onComplete() {
+                        super.onComplete();
+                    }
+                }).awaitCompletion(timeoutInSeconds, TimeUnit.SECONDS);
+
+        return responseItems.stream().map(ResponseItem::getStatus)
+                .filter(s -> s.startsWith("Status:"))
+                .findFirst()
+                .orElseThrow()
+                .replace("Status:", "");
+    }
+
+    @Override
+    public void deleteImage(String id) {
+        var dockerClient = getDockerClient();
+
+        dockerClient.removeImageCmd(id).exec();
+    }
+
+    private DockerClient getDockerClient() {
+        //TODO logic selection of docker
+        return dockerNodes.get(0).getClient();
     }
 
     private boolean existsDockerNodeName(String name) {
