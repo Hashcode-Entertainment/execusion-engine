@@ -24,4 +24,6 @@ public interface DockerManagerService {
     List<DockerImage> getAllImages();
 
     String pullImage(String name, String tag, int timeoutInSeconds);
+
+    void deleteImage(String id);
 }

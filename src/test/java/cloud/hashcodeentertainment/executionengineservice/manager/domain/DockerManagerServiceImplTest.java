@@ -40,4 +40,20 @@ class DockerManagerServiceImplTest {
                 .isInstanceOf(NotFoundException.class)
                 .hasMessageContaining("Status 404");
     }
+
+    @Test
+    void shouldDeleteImage() {
+        String validId = "d7e4c5a73ccd";
+
+        managerService.deleteImage(validId);
+    }
+
+    @Test
+    void shouldDeleteImageThrowWhenDeleteImageWithWrongId() {
+        String invalidId = "e09ae0c7e68b963a43ab482571340a0211dfe3224e6ed987c0f00375970d609";
+
+        assertThatThrownBy(() -> managerService.deleteImage(invalidId))
+                .isInstanceOf(NotFoundException.class)
+                .hasMessageContaining("Status 404:");
+    }
 }

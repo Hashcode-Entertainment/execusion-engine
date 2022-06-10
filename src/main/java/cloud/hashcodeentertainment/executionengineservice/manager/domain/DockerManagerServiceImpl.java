@@ -172,6 +172,13 @@ public class DockerManagerServiceImpl implements DockerManagerService {
                 .replace("Status:", "");
     }
 
+    @Override
+    public void deleteImage(String id) {
+        var dockerClient = getDockerClient();
+
+        dockerClient.removeImageCmd(id).exec();
+    }
+
     private DockerClient getDockerClient() {
         //TODO logic selection of docker
         return dockerNodes.get(0).getClient();

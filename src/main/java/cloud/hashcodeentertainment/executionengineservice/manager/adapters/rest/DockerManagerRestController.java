@@ -66,7 +66,8 @@ public class DockerManagerRestController {
     }
 
     @DeleteMapping("docker/images/{id}")
-    public ResponseEntity<String> deleteImage(@PathVariable Long id) {
-        return null;
+    public ResponseEntity<Void> deleteImage(@PathVariable String id) {
+        managerService.deleteImage(id);
+        return ResponseEntity.noContent().build();
     }
 }
