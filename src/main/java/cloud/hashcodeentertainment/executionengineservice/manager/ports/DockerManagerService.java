@@ -1,5 +1,6 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.ports;
 
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerImage;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNode;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
 
@@ -20,7 +21,7 @@ public interface DockerManagerService {
 
     void updateDockerClientsStatuses();
 
-
+    List<DockerImage> getAllImages();
 
     String pullImage(String name, String tag, int timeoutInSeconds);
 }

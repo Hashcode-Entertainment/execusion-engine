@@ -56,8 +56,8 @@ public class DockerManagerRestController {
     }
 
     @GetMapping("docker/images/show")
-    public ResponseEntity<String> getAllImages() {
-        return null;
+    public ResponseEntity<List<DockerImageResponse>> getAllImages() {
+        return ResponseEntity.ok(restMapper.toRestDockerImageResponse(managerService.getAllImages()));
     }
 
     @GetMapping("docker/images")

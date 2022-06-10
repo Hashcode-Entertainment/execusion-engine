@@ -4,6 +4,7 @@ import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerMa
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import lombok.RequiredArgsConstructor;
@@ -11,6 +12,7 @@ import lombok.SneakyThrows;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -112,10 +114,34 @@ public class DockerManagerServiceImpl implements DockerManagerService {
     }
 
     @Override
+    public List<DockerImage> getAllImages() {
+        var dockerClient = getDockerClient();
+
+        List<Image> images = dockerClient.listImagesCmd().exec();
+        return images.stream()
+                .map(image -> DockerImage.builder()
+                        .id(image.getId().substring(7))
+                        .name(parseRepoTag(image.getRepoTags(), true))
+                        .tag(parseRepoTag(image.getRepoTags(), false))
+                        .build()
+                )
+                .toList();
+    }
+
+    private String parseRepoTag(String[] repoTags, boolean getName) {
+        String repoTag = Arrays.stream(repoTags).findAny().orElse(":");
+        int i = repoTag.indexOf(":");
+        if (getName) {
+            return repoTag.substring(0, i);
+        } else {
+            return repoTag.substring(i + 1);
+        }
+    }
+
+    @Override
     @SneakyThrows
     public String pullImage(String name, String tag, int timeoutInSeconds) {
-        //TODO logic selection of docker
-        var dockerClient = dockerNodes.get(0).getClient();
+        var dockerClient = getDockerClient();
 
         List<PullResponseItem> responseItems = new ArrayList<>();
 
@@ -144,6 +170,11 @@ public class DockerManagerServiceImpl implements DockerManagerService {
                 .findFirst()
                 .orElseThrow()
                 .replace("Status:", "");
+    }
+
+    private DockerClient getDockerClient() {
+        //TODO logic selection of docker
+        return dockerNodes.get(0).getClient();
     }
 
     private boolean existsDockerNodeName(String name) {
