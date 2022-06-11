@@ -70,4 +70,30 @@ public class DockerManagerRestController {
         managerService.deleteImage(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("docker/containers/start")
+    public ResponseEntity<DockerContainerResponse> startContainer() {
+        return ResponseEntity.ok(restMapper.toRestDockerContainerResponse(managerService.startContainer()));
+    }
+
+    @GetMapping("docker/containers/stop")
+    public ResponseEntity<?> stopContainer() {
+        return null;
+    }
+
+    @GetMapping("docker/containers/inspect")
+    public ResponseEntity<?> inspectContainer() {
+        return null;
+    }
+
+    @GetMapping("docker/containers/wait")
+    public ResponseEntity<?> waitContainer() {
+        return null;
+    }
+
+    @DeleteMapping("docker/containers/delete/{containerId}")
+    public ResponseEntity<?> deleteContainer(@PathVariable String containerId) {
+        managerService.deleteContainer(containerId);
+        return ResponseEntity.noContent().build();
+    }
 }

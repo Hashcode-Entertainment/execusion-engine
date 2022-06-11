@@ -3,6 +3,7 @@ package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.command.CreateContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.PullResponseItem;
@@ -178,6 +179,51 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
         dockerClient.removeImageCmd(id).exec();
     }
+
+
+    @Override
+    public String startContainer() {
+        var dockerClient = getDockerClient();
+
+        var dockerOption = DockerOption.builder()
+                .name("openjdk")
+                .tag("17-jdk")
+                .build();
+
+        var containerResponse = dockerClient.createContainerCmd(dockerOption.getImage())
+                .exec();
+
+        return containerResponse.getId();
+    }
+
+    @Override
+    public void stopContainer() {
+        var dockerClient = getDockerClient();
+    }
+
+    @Override
+    public void inspectContainer() {
+        var dockerClient = getDockerClient();
+    }
+
+    @Override
+    public void waitContainer() {
+        var dockerClient = getDockerClient();
+    }
+
+    @Override
+    public void deleteContainer(String containerId) {
+        var dockerClient = getDockerClient();
+
+        dockerClient.removeContainerCmd(containerId)
+                .withForce(true)
+                .exec();
+    }
+
+
+
+
+
 
     private DockerClient getDockerClient() {
         //TODO logic selection of docker

@@ -26,4 +26,14 @@ public interface DockerManagerService {
     String pullImage(String name, String tag, int timeoutInSeconds);
 
     void deleteImage(String id);
+
+    String startContainer();
+
+    void stopContainer();
+
+    void inspectContainer();
+
+    void waitContainer();
+
+    void deleteContainer(String containerId);
 }
