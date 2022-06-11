@@ -36,7 +36,7 @@ public interface DockerManagerService {
 
     ContainerUnit inspectContainer(String containerId);
 
-    void waitContainer();
+    List<String> waitContainer(String containerId);
 
     void deleteContainer(String containerId);
 }

@@ -92,9 +92,9 @@ public class DockerManagerRestController {
         return ResponseEntity.ok(unitResponse);
     }
 
-    @GetMapping("docker/containers/wait")
-    public ResponseEntity<?> waitContainer() {
-        return null;
+    @GetMapping("docker/containers/wait/{containerId}")
+    public ResponseEntity<List<String>> waitContainer(@PathVariable String containerId) {
+        return ResponseEntity.ok(managerService.waitContainer(containerId));
     }
 
     @DeleteMapping("docker/containers/delete/{containerId}")
