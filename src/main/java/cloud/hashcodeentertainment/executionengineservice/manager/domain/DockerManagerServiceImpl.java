@@ -1,5 +1,6 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 
+import cloud.hashcodeentertainment.executionengineservice.manager.adapters.rest.DockerStartOption;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
@@ -182,16 +183,14 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
 
     @Override
-    public String startContainer() {
+    public String startContainer(DockerOption dockerOption) {
         var dockerClient = getDockerClient();
 
-        var dockerOption = DockerOption.builder()
-                .name("openjdk")
-                .tag("17-jdk")
-                .build();
-
         var containerResponse = dockerClient.createContainerCmd(dockerOption.getImage())
+                .withEntrypoint(dockerOption.getEntryPoints())
                 .exec();
+
+        dockerClient.startContainerCmd(containerResponse.getId()).exec();
 
         return containerResponse.getId();
     }

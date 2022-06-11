@@ -71,9 +71,11 @@ public class DockerManagerRestController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("docker/containers/start")
-    public ResponseEntity<DockerContainerResponse> startContainer() {
-        return ResponseEntity.ok(restMapper.toRestDockerContainerResponse(managerService.startContainer()));
+    @PostMapping("docker/containers/start")
+    public ResponseEntity<DockerContainerResponse> startContainer(@Valid @RequestBody DockerStartOption dockerStartOption) {
+        var dockerOption = restMapper.toDomainDockerOption(dockerStartOption);
+
+        return ResponseEntity.ok(restMapper.toRestDockerContainerResponse(managerService.startContainer(dockerOption)));
     }
 
     @GetMapping("docker/containers/stop")
@@ -92,7 +94,7 @@ public class DockerManagerRestController {
     }
 
     @DeleteMapping("docker/containers/delete/{containerId}")
-    public ResponseEntity<?> deleteContainer(@PathVariable String containerId) {
+    public ResponseEntity<Void> deleteContainer(@PathVariable String containerId) {
         managerService.deleteContainer(containerId);
         return ResponseEntity.noContent().build();
     }

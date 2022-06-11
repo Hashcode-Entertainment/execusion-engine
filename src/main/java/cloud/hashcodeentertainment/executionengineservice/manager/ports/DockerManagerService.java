@@ -1,8 +1,10 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.ports;
 
+import cloud.hashcodeentertainment.executionengineservice.manager.adapters.rest.DockerStartOption;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerImage;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNode;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerOption;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -27,7 +29,7 @@ public interface DockerManagerService {
 
     void deleteImage(String id);
 
-    String startContainer();
+    String startContainer(DockerOption dockerOption);
 
     void stopContainer();
 
