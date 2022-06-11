@@ -5,6 +5,7 @@ import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerMa
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.command.CreateContainerResponse;
+import com.github.dockerjava.api.command.InspectContainerResponse;
 import com.github.dockerjava.api.command.PullImageResultCallback;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.PullResponseItem;
@@ -201,8 +202,17 @@ public class DockerManagerServiceImpl implements DockerManagerService {
     }
 
     @Override
-    public void inspectContainer() {
+    public ContainerUnit inspectContainer(String containerId) {
         var dockerClient = getDockerClient();
+
+        var inspectResponse = dockerClient.inspectContainerCmd(containerId).exec();
+
+        return ContainerUnit.builder()
+                .id(inspectResponse.getId())
+                .status(inspectResponse.getState().getStatus())
+                .exitCode(inspectResponse.getState().getExitCodeLong())
+                .isRunning(inspectResponse.getState().getRunning())
+                .build();
     }
 
     @Override

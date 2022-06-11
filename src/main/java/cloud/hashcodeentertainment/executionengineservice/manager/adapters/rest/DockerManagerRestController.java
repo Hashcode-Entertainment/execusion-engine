@@ -83,9 +83,13 @@ public class DockerManagerRestController {
         return null;
     }
 
-    @GetMapping("docker/containers/inspect")
-    public ResponseEntity<?> inspectContainer() {
-        return null;
+    @GetMapping("docker/containers/inspect/{containerId}")
+    public ResponseEntity<ContainerUnitResponse> inspectContainer(@PathVariable String containerId) {
+        var unitResponse = restMapper.toRestContainerUnit(
+                managerService.inspectContainer(containerId)
+        );
+
+        return ResponseEntity.ok(unitResponse);
     }
 
     @GetMapping("docker/containers/wait")

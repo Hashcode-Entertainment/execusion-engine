@@ -1,6 +1,7 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.ports;
 
 import cloud.hashcodeentertainment.executionengineservice.manager.adapters.rest.DockerStartOption;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.ContainerUnit;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerImage;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNode;
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
@@ -33,7 +34,7 @@ public interface DockerManagerService {
 
     void stopContainer();
 
-    void inspectContainer();
+    ContainerUnit inspectContainer(String containerId);
 
     void waitContainer();
 
