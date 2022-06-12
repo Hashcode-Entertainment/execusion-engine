@@ -3,21 +3,24 @@ package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNodeRepository;
 import com.github.dockerjava.api.DockerClient;
+import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.Closeable;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
-import java.util.function.Consumer;
 
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ADDRESS_EXISTS;
 import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.NODE_NAME_EXISTS;
@@ -28,6 +31,7 @@ import static cloud.hashcodeentertainment.executionengineservice.manager.domain.
 
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class DockerManagerServiceImpl implements DockerManagerService {
 
     private final String LOCAL_NODE_NAME = "local";
@@ -178,6 +182,105 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
         dockerClient.removeImageCmd(id).exec();
     }
+
+
+    @Override
+    public String startContainer(DockerOption dockerOption) {
+        var dockerClient = getDockerClient();
+
+        var containerResponse = dockerClient.createContainerCmd(dockerOption.getImage())
+                .withEntrypoint(dockerOption.getEntryPoints())
+                .exec();
+
+        dockerClient.startContainerCmd(containerResponse.getId()).exec();
+
+        return containerResponse.getId();
+    }
+
+    @Override
+    public void stopContainer(String containerId) {
+        var dockerClient = getDockerClient();
+
+        boolean running = inspectContainer(containerId).isRunning();
+
+        if (running) {
+            dockerClient.stopContainerCmd(containerId);
+        }
+    }
+
+    @Override
+    public ContainerUnit inspectContainer(String containerId) {
+        var dockerClient = getDockerClient();
+
+        var inspectResponse = dockerClient.inspectContainerCmd(containerId).exec();
+
+        return ContainerUnit.builder()
+                .id(inspectResponse.getId())
+                .status(inspectResponse.getState().getStatus())
+                .exitCode(inspectResponse.getState().getExitCodeLong())
+                .isRunning(inspectResponse.getState().getRunning())
+                .build();
+    }
+
+    @SneakyThrows
+    @Override
+    public List<String> waitContainer(String containerId) {
+        List<String> logs = new ArrayList<>();
+
+        var dockerClient = getDockerClient();
+
+        dockerClient.logContainerCmd(containerId)
+                .withStdOut(true)
+                .withStdErr(true)
+                .withFollowStream(true)
+                .exec(new ResultCallback<Frame>() {
+                    @Override
+                    public void onStart(Closeable closeable) {
+
+                    }
+
+                    @Override
+                    public void onNext(Frame frame) {
+                        logs.add(new String(frame.getPayload()).replace("\n", ""));
+                    }
+
+                    @Override
+                    public void onError(Throwable throwable) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+
+                    @Override
+                    public void close() throws IOException {
+
+                    }
+                });
+
+        while (inspectContainer(containerId).isRunning() && inspectContainer(containerId) != null) {
+            TimeUnit.SECONDS.sleep(2);
+        }
+
+        TimeUnit.MILLISECONDS.sleep(100);
+        return logs;
+    }
+
+    @Override
+    public void deleteContainer(String containerId) {
+        var dockerClient = getDockerClient();
+
+        dockerClient.removeContainerCmd(containerId)
+                .withForce(true)
+                .exec();
+    }
+
+
+
+
+
 
     private DockerClient getDockerClient() {
         //TODO logic selection of docker

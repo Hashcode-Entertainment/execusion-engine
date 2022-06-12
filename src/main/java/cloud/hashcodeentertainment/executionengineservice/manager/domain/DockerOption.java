@@ -11,8 +11,13 @@ import java.util.List;
 public class DockerOption {
 
     private String containerId;
+
     @Singular
     private List<String> commands;
+
+    @Singular
+    private List<String> entryPoints;
+
     private String name;
     private String tag;
 
