@@ -198,8 +198,14 @@ public class DockerManagerServiceImpl implements DockerManagerService {
     }
 
     @Override
-    public void stopContainer() {
+    public void stopContainer(String containerId) {
         var dockerClient = getDockerClient();
+
+        boolean running = inspectContainer(containerId).isRunning();
+
+        if (running) {
+            dockerClient.stopContainerCmd(containerId);
+        }
     }
 
     @Override

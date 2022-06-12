@@ -78,9 +78,10 @@ public class DockerManagerRestController {
         return ResponseEntity.ok(restMapper.toRestDockerContainerResponse(managerService.startContainer(dockerOption)));
     }
 
-    @GetMapping("docker/containers/stop")
-    public ResponseEntity<?> stopContainer() {
-        return null;
+    @GetMapping("docker/containers/stop/{containerId}")
+    public ResponseEntity<?> stopContainer(@PathVariable String containerId) {
+        managerService.stopContainer(containerId);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("docker/containers/inspect/{containerId}")

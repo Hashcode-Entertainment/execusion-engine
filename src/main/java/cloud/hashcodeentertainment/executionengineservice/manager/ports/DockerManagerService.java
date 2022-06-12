@@ -32,7 +32,7 @@ public interface DockerManagerService {
 
     String startContainer(DockerOption dockerOption);
 
-    void stopContainer();
+    void stopContainer(String containerId);
 
     ContainerUnit inspectContainer(String containerId);
 
