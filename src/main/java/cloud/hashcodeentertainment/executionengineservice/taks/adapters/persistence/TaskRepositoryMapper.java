@@ -6,7 +6,15 @@ import org.mapstruct.Mapper;
 @Mapper(componentModel = "spring")
 public interface TaskRepositoryMapper {
 
-    Task toDomain(TaskEntity taskEntity);
+    default Task toDomainWithoutResultsInfo(TaskEntity taskEntity) {
+        return Task.builder()
+                .id(taskEntity.getId())
+                .name(taskEntity.getName())
+                .language(taskEntity.getLanguage())
+                .languageVersion(taskEntity.getLanguageVersion())
+                .repoAddress(taskEntity.getRepoAddress())
+                .build();
+    }
 
     TaskEntity toEntity(Task task);
 }

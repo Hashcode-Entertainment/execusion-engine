@@ -1,6 +1,5 @@
 package cloud.hashcodeentertainment.executionengineservice.taks.adapters.persistence;
 
-import cloud.hashcodeentertainment.executionengineservice.taks.adapters.rest.TaskRestMapper;
 import cloud.hashcodeentertainment.executionengineservice.taks.domain.Task;
 import cloud.hashcodeentertainment.executionengineservice.taks.ports.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,7 @@ public class TaskRepositoryAdapter implements TaskRepository {
     @Override
     public Optional<Task> getTaskById(Long taskId) {
         var taskEntity = taskJpaRepository.findById(taskId);
-        return taskEntity.map(mapper::toDomain);
+        return taskEntity.map(mapper::toDomainWithoutResultsInfo);
     }
 
     @Override
@@ -26,6 +25,6 @@ public class TaskRepositoryAdapter implements TaskRepository {
         var taskToSave = mapper.toEntity(task);
         var savedTask = taskJpaRepository.save(taskToSave);
 
-        return mapper.toDomain(savedTask);
+        return mapper.toDomainWithoutResultsInfo(savedTask);
     }
 }

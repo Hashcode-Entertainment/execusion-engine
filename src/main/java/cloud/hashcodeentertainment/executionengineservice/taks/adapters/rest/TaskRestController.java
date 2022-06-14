@@ -29,32 +29,32 @@ public class TaskRestController {
     }
 
     @DeleteMapping("{taskId}")
-    public ResponseEntity<?> deleteTask(@PathVariable String taskId) {
+    public ResponseEntity<?> deleteTask(@PathVariable Long taskId) {
         return null;
     }
 
     @PutMapping("{taskId}")
-    public ResponseEntity<?> updateTask(@PathVariable String taskId) {
+    public ResponseEntity<?> updateTask(@PathVariable Long taskId) {
         return null;
     }
 
     @GetMapping("run/{taskId}")
-    public ResponseEntity<?> runTask(@PathVariable String taskId) {
-        return null;
+    public ResponseEntity<TaskRunResponse> runTask(@PathVariable Long taskId) {
+        return ResponseEntity.ok(taskService.runTask(taskId));
     }
 
     @GetMapping("results/{taskId}")
-    public ResponseEntity<?> getExecutionResults(@PathVariable String taskId) {
+    public ResponseEntity<?> getExecutionResults(@PathVariable Long taskId) {
         return null;
     }
 
     @GetMapping("output/{taskId}")
-    public ResponseEntity<?> getTaskOutput(@PathVariable String taskId) {
+    public ResponseEntity<?> getTaskOutput(@PathVariable Long taskId) {
         return null;
     }
 
     @GetMapping("history/{taskId}")
-    public ResponseEntity<?> getTaksHistory(@PathVariable String taskId) {
+    public ResponseEntity<?> getTaksHistory(@PathVariable Long taskId) {
         return null;
     }
 }

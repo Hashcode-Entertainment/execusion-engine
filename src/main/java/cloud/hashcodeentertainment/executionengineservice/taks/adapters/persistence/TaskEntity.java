@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -31,5 +32,5 @@ public class TaskEntity {
 
     @OneToMany
     @JoinColumn(name = "task_id")
-    private List<ResultEntity> runResults;
+    private List<ResultEntity> runResults = new ArrayList<>();
 }
