@@ -1,5 +1,6 @@
 package cloud.hashcodeentertainment.executionengineservice.taks.adapters.rest;
 
+import cloud.hashcodeentertainment.executionengineservice.taks.ports.TaskService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -16,9 +17,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class TaskRestController {
 
+    private final TaskRestMapper mapper;
+    private final TaskService taskService;
+
     @PostMapping
-    public ResponseEntity<?> addTask(@RequestBody TaskCreateRequest taskCreateRequest) {
-        return null;
+    public ResponseEntity<TaskCreateResponse> addTask(@RequestBody TaskCreateRequest taskCreateRequest) {
+        var request = mapper.toDomainTaskCreate(taskCreateRequest);
+        var taskId = taskService.createTask(request);
+
+        return ResponseEntity.ok(mapper.toRestTaskCreateResponse(taskId));
     }
 
     @DeleteMapping("{taskId}")

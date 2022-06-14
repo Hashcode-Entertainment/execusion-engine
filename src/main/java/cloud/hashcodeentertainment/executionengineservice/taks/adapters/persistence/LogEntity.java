@@ -11,7 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table
+@Table(name = "logs")
 @Getter
 @Setter
 @NoArgsConstructor
