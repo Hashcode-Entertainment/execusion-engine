@@ -9,6 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class DirectoryManagerImpl implements DirectoryManager {
+
     @Override
     public void createDir(String name) {
         try {
@@ -25,6 +26,13 @@ public class DirectoryManagerImpl implements DirectoryManager {
             Files.delete(Paths.get(name));
         } catch (Exception e) {
             throw new GitClientException("Directory not found, cant delete \"" + name + "\"");
+        }
+    }
+
+    @Override
+    public void addInitialTaskDirectory(String name) {
+        if (!Files.exists(Paths.get(name))) {
+            createDir(name);
         }
     }
 }

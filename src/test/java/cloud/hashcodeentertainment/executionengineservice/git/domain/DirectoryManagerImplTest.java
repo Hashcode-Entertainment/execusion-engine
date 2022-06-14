@@ -39,5 +39,7 @@ class DirectoryManagerImplTest {
         assertThatThrownBy(() -> directoryManager.deleteDir(dirName))
                 .isInstanceOf(GitClientException.class)
                 .hasMessageContaining("Directory not found");
+
+        directoryManager.addInitialTaskDirectory("tasks_space");
     }
 }
