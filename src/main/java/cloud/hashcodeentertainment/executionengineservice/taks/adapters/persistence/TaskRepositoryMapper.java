@@ -1,6 +1,7 @@
 package cloud.hashcodeentertainment.executionengineservice.taks.adapters.persistence;
 
 import cloud.hashcodeentertainment.executionengineservice.taks.domain.Task;
+import cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskResult;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
@@ -17,4 +18,8 @@ public interface TaskRepositoryMapper {
     }
 
     TaskEntity toEntity(Task task);
+
+//    default TaskEntity toEntityFromTaskResult(TaskResult taskResult) {
+//
+//    }
 }

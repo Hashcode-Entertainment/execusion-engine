@@ -22,4 +22,8 @@ public class LogEntity {
     private Long id;
 
     private String body;
+
+    public LogEntity(String body) {
+        this.body = body;
+    }
 }

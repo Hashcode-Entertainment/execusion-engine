@@ -49,7 +49,6 @@ public class TaskServiceImpl implements TaskService {
         var task = taskRepository.getTaskById(taskId);
 
         if (task.isPresent()) {
-//            directoryManager.createDir(taskId.toString());
             gitClient.cloneRepo(task.get().getRepoAddress(), taskId);
 
             dockerManagerService.pullImage("maven", "3-eclipse-temurin-17-alpine", 200);
@@ -59,7 +58,7 @@ public class TaskServiceImpl implements TaskService {
                     .tag("3-eclipse-temurin-17-alpine")
                     .entryPoint("bin/bash")
                     .entryPoint("-c")
-                    .entryPoint("mvn --version")
+                    .entryPoint("mvn test")
                     .build();
 
             String containerId = dockerManagerService.startContainer(dockerOption);
@@ -71,6 +70,7 @@ public class TaskServiceImpl implements TaskService {
             ContainerUnit inspectContainer = dockerManagerService.inspectContainer(containerId);
 
             var result = TaskResult.builder()
+                    .id(taskId)
                     .timestamp(LocalDateTime.now())
                     .runStatus(inspectContainer.getExitCode() == 0 ? SUCCESS : FAILED)
                     .exitCode(inspectContainer.getExitCode())
@@ -79,6 +79,7 @@ public class TaskServiceImpl implements TaskService {
 
             directoryManager.deleteDir(taskId.toString());
             dockerManagerService.deleteContainer(containerId);
+            taskRepository.saveRunResult(result);
 
             return TaskRunResponse.builder().status(result.getRunStatus()).build();
         } else {
