@@ -25,6 +25,12 @@ public class TaskRepositoryAdapter implements TaskRepository {
     }
 
     @Override
+    public Optional<Task> getTaskByIdWithResults(Long taskId) {
+        var taskEntity = taskJpaRepository.findById(taskId);
+        return taskEntity.map(mapper::toDomainWithResultsInfo);
+    }
+
+    @Override
     public Task saveTask(Task task) {
         var taskToSave = mapper.toEntity(task);
         var savedTask = taskJpaRepository.save(taskToSave);

@@ -17,6 +17,17 @@ public interface TaskRepositoryMapper {
                 .build();
     }
 
+    default Task toDomainWithResultsInfo(TaskEntity taskEntity) {
+        return Task.builder()
+                .id(taskEntity.getId())
+                .name(taskEntity.getName())
+                .language(taskEntity.getLanguage())
+                .languageVersion(taskEntity.getLanguageVersion())
+                .repoAddress(taskEntity.getRepoAddress())
+                .runResults(taskEntity.getRunResults())
+                .build();
+    }
+
     TaskEntity toEntity(Task task);
 
 //    default TaskEntity toEntityFromTaskResult(TaskResult taskResult) {

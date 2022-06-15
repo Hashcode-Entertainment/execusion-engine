@@ -45,9 +45,12 @@ public class TaskRestController {
         return ResponseEntity.ok(taskService.runTask(taskId));
     }
 
-    @GetMapping("results/{taskId}")
-    public ResponseEntity<?> getExecutionResults(@PathVariable Long taskId) {
-        return null;
+    @GetMapping("results/{taskId}/{resultId}")
+    public ResponseEntity<TaskResultResponse> getExecutionResult(@PathVariable Long taskId, @PathVariable Long resultId) {
+        var taskResult = taskService.getExecutionResult(taskId, resultId);
+        var taskResultResponse = mapper.toRestTaskResultResponse(taskResult);
+
+        return ResponseEntity.ok(taskResultResponse);
     }
 
     @GetMapping("output/{taskId}")

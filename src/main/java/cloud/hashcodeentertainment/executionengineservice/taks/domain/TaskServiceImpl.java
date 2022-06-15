@@ -13,7 +13,9 @@ import lombok.SneakyThrows;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
+import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.RESULT_NOT_FOUND;
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.TASK_NOT_FOUND;
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.UNSUPPORTED_LANGUAGE;
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.UNSUPPORTED_VERSION;
@@ -96,8 +98,30 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void getExecutionResult() {
+    public TaskResult getExecutionResult(Long taskId, Long resultId) {
+        var task = taskRepository.getTaskByIdWithResults(taskId);
 
+        if (task.isPresent()) {
+            var validTask = task.get();
+            var result = validTask.getRunResults().stream()
+                    .filter(resultEntity -> Objects.equals(resultEntity.getId(), resultId))
+                    .findFirst().orElseThrow(() -> new TaskException(RESULT_NOT_FOUND));
+
+            var logs = result.getLogs().stream()
+                    .map(logEntity -> new TaskResultLog(logEntity.getBody()))
+                    .toList();
+
+            return TaskResult.builder()
+                    .id(result.getId())
+                    .timestamp(result.getTimestamp())
+                    .runStatus(result.getRunStatus())
+                    .exitCode(result.getExitCode())
+                    .logs(logs)
+                    .build();
+
+        } else {
+            throw new TaskException(TASK_NOT_FOUND);
+        }
     }
 
     @Override

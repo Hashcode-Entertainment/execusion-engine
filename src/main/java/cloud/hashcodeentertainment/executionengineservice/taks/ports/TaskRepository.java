@@ -9,6 +9,8 @@ public interface TaskRepository {
 
     Optional<Task> getTaskById(Long taskId);
 
+    Optional<Task> getTaskByIdWithResults(Long taskId);
+
     Task saveTask(Task task);
 
     Long saveRunResult(TaskResult taskResult);
