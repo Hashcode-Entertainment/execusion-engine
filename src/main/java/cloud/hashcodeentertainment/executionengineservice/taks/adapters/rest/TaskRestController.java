@@ -56,7 +56,7 @@ public class TaskRestController {
     }
 
     @GetMapping("history/{taskId}")
-    public ResponseEntity<?> getTaksHistory(@PathVariable Long taskId) {
+    public ResponseEntity<?> getTaskHistory(@PathVariable Long taskId) {
         return null;
     }
 }

@@ -84,9 +84,12 @@ public class TaskServiceImpl implements TaskService {
 
             directoryManager.deleteDir(taskId.toString());
             dockerManagerService.deleteContainer(containerId);
-            taskRepository.saveRunResult(result);
+            Long runResult = taskRepository.saveRunResult(result);
 
-            return TaskRunResponse.builder().status(result.getRunStatus()).build();
+            return TaskRunResponse.builder()
+                    .id(runResult)
+                    .status(result.getRunStatus())
+                    .build();
         } else {
             throw new TaskException(TASK_NOT_FOUND);
         }
@@ -98,7 +101,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void getTaksOutput() {
+    public void getTaskOutput() {
 
     }
 

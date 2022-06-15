@@ -11,5 +11,5 @@ public interface TaskRepository {
 
     Task saveTask(Task task);
 
-    void saveRunResult(TaskResult taskResult);
+    Long saveRunResult(TaskResult taskResult);
 }

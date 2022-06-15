@@ -11,7 +11,7 @@ public interface TaskService {
 
     void getExecutionResult();
 
-    void getTaksOutput();
+    void getTaskOutput();
 
     void getTaskHistory();
 }

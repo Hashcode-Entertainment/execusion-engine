@@ -33,7 +33,7 @@ public class TaskRepositoryAdapter implements TaskRepository {
     }
 
     @Override
-    public void saveRunResult(TaskResult taskResult) {
+    public Long saveRunResult(TaskResult taskResult) {
         var taskToUpdate = taskJpaRepository.findById(taskResult.getId());
 
         if (taskToUpdate.isPresent()) {
@@ -50,7 +50,12 @@ public class TaskRepositoryAdapter implements TaskRepository {
             result.setLogs(logs);
 
             task.addResult(result);
-            taskJpaRepository.save(task);
+            TaskEntity taskEntity = taskJpaRepository.save(task);
+
+            return taskEntity.getRunResults().stream()
+                    .map(ResultEntity::getId)
+                    .mapToLong(v -> v)
+                    .max().orElseThrow();
 
         } else {
             throw new TaskException(TASK_NOT_FOUND);
