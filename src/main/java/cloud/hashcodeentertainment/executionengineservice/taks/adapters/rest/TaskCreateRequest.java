@@ -2,20 +2,21 @@ package cloud.hashcodeentertainment.executionengineservice.taks.adapters.rest;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
 @Data
 public class TaskCreateRequest {
 
-    @NotNull
+    @NotEmpty
     private String name;
 
-    @NotNull
+    @NotEmpty
     private String language;
 
-    @NotNull
+    @NotEmpty
     private String languageVersion;
 
-    @NotNull
+    @NotEmpty
     private String repoAddress;
 }

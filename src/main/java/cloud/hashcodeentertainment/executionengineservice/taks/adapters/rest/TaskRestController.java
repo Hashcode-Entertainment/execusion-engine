@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("tasks")
 @RequiredArgsConstructor
@@ -21,7 +23,7 @@ public class TaskRestController {
     private final TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<TaskCreateResponse> addTask(@RequestBody TaskCreateRequest taskCreateRequest) {
+    public ResponseEntity<TaskCreateResponse> addTask(@Valid @RequestBody TaskCreateRequest taskCreateRequest) {
         var request = mapper.toDomainTaskCreate(taskCreateRequest);
         var taskId = taskService.createTask(request);
 
