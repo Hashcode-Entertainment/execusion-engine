@@ -13,7 +13,6 @@ import lombok.SneakyThrows;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.TASK_NOT_FOUND;
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.UNSUPPORTED_LANGUAGE;
@@ -50,21 +49,27 @@ public class TaskServiceImpl implements TaskService {
 
         if (task.isPresent()) {
             gitClient.cloneRepo(task.get().getRepoAddress(), taskId);
+            var version = task.get().getLanguageVersion();
 
-            dockerManagerService.pullImage("maven", "3-eclipse-temurin-17-alpine", 200);
+            dockerManagerService.pullImage("maven", "3-eclipse-temurin-" + version + "-alpine", 200);
 
             var dockerOption = DockerOption.builder()
+                    .taskId(taskId)
                     .name("maven")
-                    .tag("3-eclipse-temurin-17-alpine")
-                    .entryPoint("bin/bash")
+                    .tag("3-eclipse-temurin-" + version + "-alpine")
+                    .entryPoint("/bin/bash")
                     .entryPoint("-c")
-                    .entryPoint("mvn test")
+                    .entryPoint("ls -la\npwd\nmvn test\nmvn clean")
                     .build();
 
             String containerId = dockerManagerService.startContainer(dockerOption);
             List<String> strings = dockerManagerService.waitContainer(containerId);
 
-            var logs = strings.stream().map(TaskResultLog::new).toList();
+            var logs = strings.stream()
+                    .filter(s -> s.startsWith("["))
+                    .map(TaskResultLog::new)
+                    .toList();
+
             strings.forEach(System.out::println);
 
             ContainerUnit inspectContainer = dockerManagerService.inspectContainer(containerId);
