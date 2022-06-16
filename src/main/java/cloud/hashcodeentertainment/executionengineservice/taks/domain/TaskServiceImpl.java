@@ -74,14 +74,16 @@ public class TaskServiceImpl implements TaskService {
                     .map(TaskResultLog::new)
                     .toList();
 
-            strings.forEach(System.out::println);
+//            strings.forEach(System.out::println);
 
             ContainerUnit inspectContainer = dockerManagerService.inspectContainer(containerId);
+
+            var isSuccess = strings.stream().noneMatch(s -> s.startsWith("[ERROR]"));
 
             var result = TaskResult.builder()
                     .id(taskId)
                     .timestamp(LocalDateTime.now())
-                    .runStatus(inspectContainer.getExitCode() == 0 ? SUCCESS : FAILED)
+                    .runStatus(isSuccess ? SUCCESS : FAILED)
                     .exitCode(inspectContainer.getExitCode())
                     .logs(logs)
                     .build();
