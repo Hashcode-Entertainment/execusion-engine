@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("tasks")
@@ -59,7 +60,8 @@ public class TaskRestController {
     }
 
     @GetMapping("history/{taskId}")
-    public ResponseEntity<?> getTaskHistory(@PathVariable Long taskId) {
-        return null;
+    public ResponseEntity<List<TaskHistoryResponse>> getTaskHistory(@PathVariable Long taskId) {
+        var result = taskService.getTaskHistory(taskId);
+        return ResponseEntity.ok(mapper.toRestTaskHistoryResponse(result));
     }
 }

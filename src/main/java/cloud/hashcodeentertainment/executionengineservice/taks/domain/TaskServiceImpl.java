@@ -12,8 +12,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 
 import java.time.LocalDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.RESULT_NOT_FOUND;
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.TASK_NOT_FOUND;
@@ -130,8 +132,21 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void getTaskHistory() {
+    public List<TaskHistory> getTaskHistory(Long taskId) {
+        Optional<Task> taskByIdWithResults = taskRepository.getTaskByIdWithResults(taskId);
 
+        if (taskByIdWithResults.isPresent()) {
+            return taskByIdWithResults.get().getRunResults().stream()
+                    .map(resultEntity -> TaskHistory.builder()
+                            .id(resultEntity.getId())
+                            .timestamp(resultEntity.getTimestamp())
+                            .runStatus(resultEntity.getRunStatus())
+                            .exitCode(resultEntity.getExitCode())
+                            .build()
+                    ).distinct().sorted(Comparator.comparing(TaskHistory::getId)).toList();
+        } else {
+            throw new TaskException(TASK_NOT_FOUND);
+        }
     }
 
     private String verifyAndGetLanguage(String language) {
