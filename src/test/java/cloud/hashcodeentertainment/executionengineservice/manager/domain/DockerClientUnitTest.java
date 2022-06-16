@@ -1,11 +1,13 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.exception.DockerClientException;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerClientUnit;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerClientDictionary.INVALID_CHARACTER;
-import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerClientDictionary.INVALID_PORT_NUMBER;
+import static cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerClientDictionary.INVALID_CHARACTER;
+import static cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerClientDictionary.INVALID_PORT_NUMBER;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Disabled

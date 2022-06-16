@@ -1,6 +1,6 @@
 package cloud.hashcodeentertainment.executionengineservice.manager;
 
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerNodeRequest;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.event.ApplicationReadyEvent;

@@ -1,14 +1,12 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.ports;
 
-import cloud.hashcodeentertainment.executionengineservice.manager.adapters.rest.DockerStartOption;
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.ContainerUnit;
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerImage;
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNode;
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerNodeRequest;
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerOption;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.ContainerUnit;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerImage;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerNode;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerNodeRequest;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerOption;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 public interface DockerManagerService {
 
