@@ -1,6 +1,7 @@
 package cloud.hashcodeentertainment.executionengineservice.commons.rest;
 
 import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerException;
+import cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -32,5 +33,10 @@ public class GlobalExceptionHandler {
             case ONLY_ONE_LOCAL_INSTANCE -> ResponseEntity.status(BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
             default -> ResponseEntity.status(BAD_REQUEST).body(new ErrorResponse("unknown reason"));
         };
+    }
+
+    @ExceptionHandler(TaskException.class)
+    public ResponseEntity<ErrorResponse> handleTaskException(TaskException e) {
+        return ResponseEntity.status(BAD_REQUEST).body(new ErrorResponse(e.getMessage()));
     }
 }

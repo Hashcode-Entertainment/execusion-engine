@@ -16,7 +16,7 @@ public class GitClientImpl implements GitClient {
             Git.cloneRepository()
                     .setURI(repoAddress)
                     .setDirectory(new File(baseDir + "/" + taskId))
-                    .call();
+                    .call().close();
         } catch (GitAPIException e) {
             throw new GitClientException(e.getMessage());
         }
