@@ -2,8 +2,8 @@ package cloud.hashcodeentertainment.executionengineservice.taks.domain;
 
 import cloud.hashcodeentertainment.executionengineservice.git.ports.DirectoryManager;
 import cloud.hashcodeentertainment.executionengineservice.git.ports.GitClient;
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.ContainerUnit;
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerOption;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.ContainerUnit;
+import cloud.hashcodeentertainment.executionengineservice.manager.domain.utils.DockerOption;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
 import cloud.hashcodeentertainment.executionengineservice.taks.adapters.rest.TaskRunResponse;
 import cloud.hashcodeentertainment.executionengineservice.taks.ports.TaskRepository;
@@ -17,10 +17,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.RESULT_NOT_FOUND;
-import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.TASK_NOT_FOUND;
-import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.UNSUPPORTED_LANGUAGE;
-import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.UNSUPPORTED_VERSION;
+import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskExceptionDict.*;
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskRunStatus.FAILED;
 import static cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskRunStatus.SUCCESS;
 

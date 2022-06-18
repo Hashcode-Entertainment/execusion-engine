@@ -1,7 +1,7 @@
 package cloud.hashcodeentertainment.executionengineservice.taks;
 
-import cloud.hashcodeentertainment.executionengineservice.git.domain.DirectoryManagerImpl;
-import cloud.hashcodeentertainment.executionengineservice.git.domain.GitClientImpl;
+import cloud.hashcodeentertainment.executionengineservice.git.domain.implementation.DirectoryManagerImpl;
+import cloud.hashcodeentertainment.executionengineservice.git.domain.implementation.GitClientImpl;
 import cloud.hashcodeentertainment.executionengineservice.git.ports.DirectoryManager;
 import cloud.hashcodeentertainment.executionengineservice.git.ports.GitClient;
 import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
