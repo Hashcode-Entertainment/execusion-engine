@@ -1,11 +1,12 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 
+import cloud.hashcodeentertainment.executionengineservice.manager.exception.DockerClientException;
+import cloud.hashcodeentertainment.executionengineservice.manager.model.DockerClientUnit;
+import cloud.hashcodeentertainment.executionengineservice.util.MessageUtils;
 import org.apache.hc.client5.http.HttpHostConnectException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerClientDictionary.INVALID_CHARACTER;
-import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerClientDictionary.INVALID_PORT_NUMBER;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 @Disabled
@@ -43,7 +44,7 @@ class DockerClientUnitTest {
 
         assertThatThrownBy(() -> dockerClientUnit.getRemoteClient(address, port).pingCmd().exec())
                 .isInstanceOf(DockerClientException.class)
-                .hasMessage(INVALID_PORT_NUMBER);
+                .hasMessage(MessageUtils.getMessage("docker.client.invalid.port.number"));
     }
 
     @Test
@@ -53,7 +54,7 @@ class DockerClientUnitTest {
 
         assertThatThrownBy(() -> dockerClientUnit.getRemoteClient(address, port).pingCmd().exec())
                 .isInstanceOf(DockerClientException.class)
-                .hasMessage(INVALID_PORT_NUMBER);
+                .hasMessage(MessageUtils.getMessage("docker.client.invalid.port.number"));
     }
 
     @Test
@@ -63,6 +64,6 @@ class DockerClientUnitTest {
 
         assertThatThrownBy(() -> dockerClientUnit.getRemoteClient(address, port).pingCmd().exec())
                 .isInstanceOf(DockerClientException.class)
-                .hasMessage(INVALID_CHARACTER);
+                .hasMessage(MessageUtils.getMessage("docker.client.invalid.character"));
     }
 }

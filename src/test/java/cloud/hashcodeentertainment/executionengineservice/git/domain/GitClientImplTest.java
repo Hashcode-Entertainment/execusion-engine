@@ -1,6 +1,8 @@
 package cloud.hashcodeentertainment.executionengineservice.git.domain;
 
-import cloud.hashcodeentertainment.executionengineservice.git.ports.GitClient;
+import cloud.hashcodeentertainment.executionengineservice.git.exception.GitClientException;
+import cloud.hashcodeentertainment.executionengineservice.git.service.GitClient;
+import cloud.hashcodeentertainment.executionengineservice.git.service.implementation.GitClientImpl;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

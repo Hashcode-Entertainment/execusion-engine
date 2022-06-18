@@ -1,20 +1,21 @@
 package cloud.hashcodeentertainment.executionengineservice.commons.rest;
 
-import cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerException;
-import cloud.hashcodeentertainment.executionengineservice.taks.domain.TaskException;
+import cloud.hashcodeentertainment.executionengineservice.manager.exception.DockerManagerException;
+import cloud.hashcodeentertainment.executionengineservice.task.exceptions.TaskException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ADDRESS_EXISTS;
-import static cloud.hashcodeentertainment.executionengineservice.manager.domain.DockerManagerExceptionDict.ONLY_ONE_LOCAL_INSTANCE;
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.CONFLICT;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    public static final String ONLY_ONE_LOCAL_INSTANCE = "Only one local instance is allowed";
+    public static final String ADDRESS_EXISTS = "Address already in use, cant create node on existing address";
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleMethodArgumentNotValidException(MethodArgumentNotValidException e) {

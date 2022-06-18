@@ -1,7 +1,9 @@
 package cloud.hashcodeentertainment.executionengineservice.manager.domain;
 
-import cloud.hashcodeentertainment.executionengineservice.manager.adapters.persistence.DockerNodeRepositoryAdapter;
-import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerManagerService;
+import cloud.hashcodeentertainment.executionengineservice.manager.adapter.DockerNodeRepositoryAdapter;
+import cloud.hashcodeentertainment.executionengineservice.manager.request.DockerNodeRequest;
+import cloud.hashcodeentertainment.executionengineservice.manager.service.DockerManagerService;
+import cloud.hashcodeentertainment.executionengineservice.manager.service.implementation.DockerManagerServiceImpl;
 import com.github.dockerjava.api.exception.NotFoundException;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
