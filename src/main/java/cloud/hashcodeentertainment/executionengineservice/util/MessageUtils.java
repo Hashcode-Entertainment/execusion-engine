@@ -4,10 +4,12 @@ import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 @Service
 @Order(value = Ordered.HIGHEST_PRECEDENCE)
+@Component
 public class MessageUtils {
 
     private static ResourceBundleMessageSource messageSource;
