@@ -2,6 +2,7 @@ package cloud.hashcodeentertainment.executionengineservice.git.domain.implementa
 
 import cloud.hashcodeentertainment.executionengineservice.git.domain.exception.GitClientException;
 import cloud.hashcodeentertainment.executionengineservice.git.ports.DirectoryManager;
+import lombok.SneakyThrows;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -10,6 +11,8 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 public class DirectoryManagerImpl implements DirectoryManager {
+
+    private final String TASK_BASE_DIR = "tasks_space";
 
     @Override
     public void createDir(String name) {
@@ -23,8 +26,7 @@ public class DirectoryManagerImpl implements DirectoryManager {
     @Override
     public void deleteDir(String name) {
         try {
-            FileUtils.cleanDirectory(new File(name));
-            Files.delete(Paths.get(name));
+            FileUtils.forceDelete(new File(TASK_BASE_DIR, name));
         } catch (Exception e) {
             throw new GitClientException("Directory not found, cant delete \"" + name + "\"");
         }

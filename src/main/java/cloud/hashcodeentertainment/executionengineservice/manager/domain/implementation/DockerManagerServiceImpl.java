@@ -7,10 +7,12 @@ import cloud.hashcodeentertainment.executionengineservice.manager.ports.DockerNo
 import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.api.async.ResultCallback;
 import com.github.dockerjava.api.command.PullImageResultCallback;
+import com.github.dockerjava.api.model.Bind;
 import com.github.dockerjava.api.model.Frame;
 import com.github.dockerjava.api.model.Image;
 import com.github.dockerjava.api.model.PullResponseItem;
 import com.github.dockerjava.api.model.ResponseItem;
+import com.github.dockerjava.api.model.Volume;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -188,10 +192,16 @@ public class DockerManagerServiceImpl implements DockerManagerService {
 
     @Override
     public String startContainer(DockerOption dockerOption) {
+        String baseDir = "tasks_space";
         var dockerClient = getDockerClient();
 
         var containerResponse = dockerClient.createContainerCmd(dockerOption.getImage())
                 .withEntrypoint(dockerOption.getEntryPoints())
+                .withBinds(new Bind(
+                        "/home/kris/programming/execution-engine/" + baseDir + "/" + dockerOption.getTaskId(),
+                        new Volume("/task"))
+                )
+                .withWorkingDir("/task")
                 .exec();
 
         dockerClient.startContainerCmd(containerResponse.getId()).exec();
@@ -227,6 +237,8 @@ public class DockerManagerServiceImpl implements DockerManagerService {
     @SneakyThrows
     @Override
     public List<String> waitContainer(String containerId) {
+        var expire = Instant.now().plus(60, ChronoUnit.SECONDS);
+
         List<String> logs = new ArrayList<>();
 
         var dockerClient = getDockerClient();

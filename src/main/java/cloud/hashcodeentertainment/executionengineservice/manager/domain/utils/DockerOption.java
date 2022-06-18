@@ -11,6 +11,7 @@ import java.util.List;
 public class DockerOption {
 
     private String containerId;
+    private Long taskId;
 
     @Singular
     private List<String> commands;
